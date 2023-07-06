@@ -3,7 +3,7 @@ import React from "react";
 const Header = (props) => { 
   return ( 
     <div>
-      <h1>{props.course.name}</h1>
+      <h1>{props.course}</h1>
     </div>
   );
 };
@@ -19,48 +19,47 @@ const Part = (props) => {
 const Content = (props) => { 
   return (
     <div>
-      <Part part={props.bits[0].part} exercises={props.bits[0].exercises} />
-      <Part part={props.bits[1].part} exercises={props.bits[1].exercises} />
-      <Part part={props.bits[2].part} exercises={props.bits[2].exercises} />
+      <Part part={props.part1.part} exercises={props.part1.exercises} /> 
+      <Part part={props.part2.part} exercises={props.part2.exercises} />
+      <Part part={props.part3.part} exercises={props.part3.exercises} />
     </div>
-  );
+  ); 
+
 };
 
 const Total = (props) => { 
   return (
     <div>
-      <p>Number of exercises {props.bits[0].exercises +
-                              props.bits[1].exercises + 
-                              props.bits[2].exercises }
+      
+      <p>Number of exercises is {props.part1.exercises + 
+                              props.part2.exercises + 
+                              props.part3.exercises} 
       </p>
     </div>
   );
 };
 
 const App = () => { 
-  const course = { 
-    name: "Half Stack Application Development", 
-    bits: [ 
-      {
-        part: "Fundamentals of React", 
-        exercises: 10, 
-      },
-      { 
-        part: "Using props to pass data", 
-        exercises: 7, 
-      }, 
-      { 
-        part: "State of a component", 
-        exercises: 14, 
-      },
-    ],
-  }; 
+  const course = "Half Stack Application Development"; 
+  const part1 = {
+      part: "Fundamentals of React", 
+      exercises: 10, 
+    };
+  const part2 = { 
+      part: "Using props to pass data", 
+      exercises: 7, 
+    };
+  const part3 = {
+      part: "State of a component", 
+      exercises: 14, 
+    };
+  
   
   return ( 
     <div>
       <Header course={course}/>
-      <Content bits={course.bits}/>
-      <Total  bits={course.bits}/> 
+      <Content part1={part1} part2={part2} part3={part3} /> 
+      <Total  part1={part1} part2={part2} part3={part3}/>  
     </div>
   );
 };
