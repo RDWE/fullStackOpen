@@ -3,7 +3,7 @@ import { useState } from 'react'
 const Button = (props) =>  { 
     return (
         <div className="button">
-        <button onClick={props.handle} style={{"border-radius": "6px", "background-color": "white", "border-width": "1px"}}>
+        <button onClick={props.handle} style={{"borderRadius": "6px", "backgroundColor": "white", "borderWidth": "1px"}}>
           {props.text}
         </button>
         </div>
@@ -27,13 +27,23 @@ const App = () => {
   ]
    
   const [selected, setSelected] = useState(getRandomInt(0, anecdotes.length))
+  const [ votes, setVotes ] = useState( Array(anecdotes.length).fill(0) )
 
   const randomNumberGen = () => setSelected(getRandomInt(0, anecdotes.length))
+  const handleVote = () => { 
+    const updated = [...votes]; 
+    updated[selected] += 1; 
+    setVotes([...updated])
+  }
 
   return (
     <div>
         {anecdotes[selected]}
-        <Button handle={randomNumberGen} text="Next anecdote" />
+        has {votes[selected]} votes.
+        <div style={{display: "flex", }}>
+          <Button handle={handleVote} text="Vote!" /> &nbsp;
+          <Button handle={randomNumberGen} text="Next anecdote" />
+        </div>
     </div>
     
   )
