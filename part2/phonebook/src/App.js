@@ -18,8 +18,14 @@ const App = () => {
       name: newName,
       id: persons.length + 1,
     }
-    setPersons(persons.concat(newPerson)); 
-    setNewName(''); 
+    const exists = persons.map(person => person.name); 
+    if (exists.includes(newName)) { 
+      const s = `${newName} is already in the phonebook!`; 
+      alert(s)
+    } else { 
+      setPersons(persons.concat(newPerson)); 
+      setNewName(''); 
+    }
   }
 
   return (
@@ -35,7 +41,7 @@ const App = () => {
       </form>
       <h2>Numbers</h2>
       <ul>
-        {persons.map(person => <li id={person.id}>{person.name}</li>)}
+        {persons.map(person => <li key={person.name}>{person.name}</li>)}
       </ul>
     </div>
   )
