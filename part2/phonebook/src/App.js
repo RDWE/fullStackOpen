@@ -3,19 +3,25 @@ import { useState } from 'react'
 const App = () => {
   const [persons, setPersons] = useState([
     { name: 'Arto Hellas', 
-      id: 1
+      number: 1234,
+      id: 1,
     }
   ]) 
-  const [newName, setNewName] = useState('')
+  const [newName, setNewName] = useState(''); 
+  const [newNum, setNewNum] = useState(0); 
 
   const handleNewName = ( event ) => { 
     setNewName(event.target.value);    
+  }
+  const handleNewNum = ( e ) => { 
+    setNewNum( e.target.value ); 
   }
 
   const addNewName = ( event ) => { 
     event.preventDefault(); 
     const newPerson = { 
       name: newName,
+      number: newNum,
       id: persons.length + 1,
     }
     const exists = persons.map(person => person.name); 
@@ -36,12 +42,15 @@ const App = () => {
           name: <input value={newName} onChange={handleNewName}/>
         </div>
         <div>
+          number: <input value={newNum} onChange={handleNewNum} />
+        </div>
+        <div>
           <button type="submit">add</button>
         </div>
       </form>
       <h2>Numbers</h2>
       <ul>
-        {persons.map(person => <li key={person.name}>{person.name}</li>)}
+        {persons.map(person => <li key={person.name}>{person.name} -- {person.number}</li>)}
       </ul>
     </div>
   )
