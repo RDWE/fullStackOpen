@@ -1,5 +1,46 @@
 import { useState } from 'react'
 
+const Filter = ({filterText, setFilterText}) => {
+
+  return ( 
+    <div>
+        filter shown with: <input value={filterText} onChange={(e) => setFilterText(e.target.value)}></input>
+    </div>
+  )
+} 
+
+const PersonForm = ({addNewName, newName, handleNewName, newNum, handleNewNum}) => {
+
+  return ( 
+  <div>
+    <form onSubmit={addNewName}>
+        <div>
+          name: <input value={newName} onChange={handleNewName}/>
+        </div>
+        <div>
+          number: <input value={newNum} onChange={handleNewNum} />
+        </div>
+        <div>
+          <button type="submit">add</button>
+        </div>
+      </form>
+    </div>
+  )
+} 
+
+const Persons = ({persons, filterText}) => {
+
+  return ( 
+    <div>
+      <ul>
+        {persons
+        .filter((person) => person.name.toLowerCase().includes(filterText.toLowerCase()))
+        .map(person => <li key={person.name}>{person.name} -- {person.number}</li>)}
+      </ul>
+    </div>
+  )
+} 
+
 const App = () => {
   const [persons, setPersons] = useState([
     { name: 'Arto Hellas', 
@@ -34,33 +75,18 @@ const App = () => {
     } else { 
       setPersons(persons.concat(newPerson)); 
       setNewName(''); 
+      setNewNum(0); 
     }
   }
 
   return (
     <div>
       <h2>Phonebook</h2>
-      <div>
-        filter shown with: <input value={filterText} onChange={(e) => setFilterText(e.target.value)}></input>
-      </div>
+      <Filter filterText={filterText} setFilterText={setFilterText}/> 
       <h2>add a new</h2>
-      <form onSubmit={addNewName}>
-        <div>
-          name: <input value={newName} onChange={handleNewName}/>
-        </div>
-        <div>
-          number: <input value={newNum} onChange={handleNewNum} />
-        </div>
-        <div>
-          <button type="submit">add</button>
-        </div>
-      </form>
+      <PersonForm addNewName={addNewName} newName={newName} handleNewName={handleNewName} newNum={newNum} handleNewNum={handleNewNum} /> 
       <h2>Numbers</h2>
-      <ul>
-        {persons
-        .filter((person) => person.name.toLowerCase().includes(filterText.toLowerCase()))
-        .map(person => <li key={person.name}>{person.name} -- {person.number}</li>)}
-      </ul>
+      <Persons persons={persons} filterText={filterText}/>
     </div>
   )
 }
