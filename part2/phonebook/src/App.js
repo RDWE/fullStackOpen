@@ -4,23 +4,26 @@ import noteService from './Services/notes'
 import PersonEntry from './Components/Persons'
 import PersonForm from './Components/PersonForm'
 import Filter from './Components/Filter'
+import Notification from './Components/Notification'
+import './styles.css';
 
 const App = () => {
   const [persons, setPersons] = useState([]) 
   const [newName, setNewName] = useState(''); 
   const [newNum, setNewNum] = useState(0); 
   const [filterText, setFilterText] = useState(''); 
+  const [message, setMessage] = useState(null);
 
   // const exists = persons?.map(person => person.name); 
   const showablePeople = persons?.filter((person) => person.name.toLowerCase().includes(filterText.toLowerCase()))
 
   // Getting all the current names in the server 
-  useEffect(() => { 
+  useEffect(() => {
     noteService
       .getAll()
       .then(entries => { 
         setPersons(entries)
-    })}, 
+    })},
     [])
 
   const handleNewName = ( event ) => { 
@@ -37,15 +40,12 @@ const App = () => {
     }
   }
 
-
-
   const addNewName = ( event ) => { 
     event.preventDefault(); 
 
     const newPerson = { 
       name: newName,
       number: newNum,
-      // id: persons.length + 1,
     };
     
     if (persons.some((person) => person.name === newName)) { 
@@ -60,25 +60,36 @@ const App = () => {
         noteService
           .update(person.id, changedPerson)
           .then(returnedPerson => { 
+            // Messaging first, then update the array which will re-render on screen 
+            setMessage(`Updated ${changedPerson.name}`); 
+            setTimeout(() => { 
+              setMessage(null)
+            }, 3000)
             setPersons(persons.map(person => person.id !== returnedPerson.id ? person : returnedPerson)); 
-          })
-      }
-    } else { 
+          })}
+
+     } else { 
       console.log(persons.length)
-      
       noteService
         .create(newPerson)
         .then(returnedPerson => { 
+          setMessage(`Added ${returnedPerson.name}`); 
+          setTimeout(() => { 
+            setMessage(null)
+          }, 3000)
           setPersons(persons.concat(returnedPerson))
           setNewName(''); 
           setNewNum(0); 
-        }).catch(error => console.log(error.message) ) 
+        })
+        .catch(error => console.log(error.message)) 
+      }
     }
-  }
+    
 
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={message} />
       <Filter filterText={filterText} setFilterText={setFilterText}/> 
       <h2>Add New Contact</h2>
       <PersonForm addNewName={addNewName} newName={newName} handleNewName={handleNewName} newNum={newNum} handleNewNum={handleNewNum} /> 
@@ -89,5 +100,4 @@ const App = () => {
       </div>
   )
 }
-
-export default App
+export default App;
