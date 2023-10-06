@@ -4,7 +4,7 @@ import noteService from './Services/notes'
 import PersonEntry from './Components/Persons'
 import PersonForm from './Components/PersonForm'
 import Filter from './Components/Filter'
-import Notification from './Components/Notification'
+import {Notification, ErrorNotice} from './Components/Notification'
 import './styles.css';
 
 const App = () => {
@@ -13,6 +13,7 @@ const App = () => {
   const [newNum, setNewNum] = useState(0); 
   const [filterText, setFilterText] = useState(''); 
   const [message, setMessage] = useState(null);
+  const [errorMessage, setErrorMessage] = useState(null)
 
   // const exists = persons?.map(person => person.name); 
   const showablePeople = persons?.filter((person) => person.name.toLowerCase().includes(filterText.toLowerCase()))
@@ -66,7 +67,13 @@ const App = () => {
               setMessage(null)
             }, 3000)
             setPersons(persons.map(person => person.id !== returnedPerson.id ? person : returnedPerson)); 
-          })}
+          })
+          .catch(error => {
+            console.log(error.message); 
+            setErrorMessage(`Information of ${changedPerson.name} has already been removed from the server.`); 
+            setTimeout(() => setErrorMessage(null), 3000)
+          })
+        }
 
      } else { 
       console.log(persons.length)
@@ -90,6 +97,7 @@ const App = () => {
     <div>
       <h2>Phonebook</h2>
       <Notification message={message} />
+      <ErrorNotice message={errorMessage} />
       <Filter filterText={filterText} setFilterText={setFilterText}/> 
       <h2>Add New Contact</h2>
       <PersonForm addNewName={addNewName} newName={newName} handleNewName={handleNewName} newNum={newNum} handleNewNum={handleNewNum} /> 
