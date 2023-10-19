@@ -1,0 +1,19 @@
+.notice { 
+    padding: 5px; 
+    color: green; 
+    background-color: aquamarine;
+    border-style: double; 
+    border-radius: 3px; 
+    font-size: 20px; 
+    margin-bottom: 5px;
+}
+
+.error { 
+    padding: 5px; 
+    color: purple; 
+    background-color: orangered;
+    border-style: double; 
+    border-radius: 3px; 
+    font-size: 20px; 
+    margin-bottom: 5px;
+}
