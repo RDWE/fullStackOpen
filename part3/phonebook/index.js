@@ -45,6 +45,41 @@ app.get('/info', (request, response) => {
     return response.send(`Phonebook has information for ${data.length} people.<br>${Date()}`)
 })
 
+app.delete('/api/persons/:id', (request, response) => { 
+  // Instead of some function call, delete the element from the data array. No return statement
+  const id = Number(request.params.id)
+  data = data.filter(d => d.id !== id)
+  response.status(204).end()
+})
+
+const generateNum = (max) => { 
+  return Math.floor(Math.random() * max); 
+}
+
+app.post('/api/persons', (request, response) => {
+    const body = request.body; 
+    const dataNames = data.map(datum => datum.name)
+
+    if (!body.name || !body.number) { 
+      return response.status(400).json({
+        error: "Name or Number is Missing"
+      })
+    } else if (dataNames.includes(body.name)) { 
+      return response.status(400).json({
+        error: "Name must be unique"
+      })
+    }
+
+    const person = { 
+      id: generateNum(100000000), 
+      name: body.name, 
+      number: body.number
+    }
+
+    data = data.concat(person)
+    response.json(person); 
+})
+
 const PORT = 3001; 
 app.listen(PORT, () => { 
     console.log(`Server running on port ${PORT}`);
