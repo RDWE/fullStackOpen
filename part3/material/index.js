@@ -4,6 +4,18 @@ const app = express();
 
 app.use(express.json())
 
+// Middleware for logging 
+const requestLogger = (request, response, next) => { 
+	console.log('Method: ', request.method)
+	console.log('Path: ', request.path)
+	console.log('Body: ', request.body)
+	console.log('---')
+	next()
+}
+
+// Taking in the requestLogger middleware
+app.use(requestLogger)
+
 let notes = [ 
     {
         id: 1, 
@@ -64,9 +76,9 @@ app.post('/api/notes', (request, response) => {
 	}
 
 	const note = { 
-	content: body.content, 
-	important: body.important || false, 
-	id: generateId(), 
+        content: body.content, 
+        important: body.important || false, 
+        id: generateId(), 
 	}
 
 	notes = notes.concat(note)
@@ -79,6 +91,14 @@ app.delete('/api/notes/:id', (request, response) => {
     notes = notes.filter(note => note.id !== id)
     response.status(204).end()
 })
+
+// Middleware to capture unhandled routes
+const unknownEndpoint = (request, response) => { 
+    response.status(404).send({ error: "unknown endpoint"})
+}
+
+// Taking unknownEndpoint into use
+app.use(unknownEndpoint)
 
 const PORT = 3001; 
 app.listen(PORT, () => { 
